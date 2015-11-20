@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:outlineProvider="bounds">
+
+    <TextView
+        android:id="@+id/image_tv"
+        android:text="@string/image_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:outlineProvider="background"
+        android:padding="5dp"
+        />
+
+    <TextView
+        android:id="@+id/text_tv"
+        android:text="@string/text_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        />
+
+    <TextView
+        android:id="@+id/saved_tv"
+        android:text="@string/save_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        />
+
+</LinearLayout>

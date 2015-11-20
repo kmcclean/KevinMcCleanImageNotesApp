@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">KevinMcCleanImageNotesApp</string>
+    <string name="image_label">Image Notes</string>
+    <string name="text_label">Text Notes</string>
+    <string name="save_button">Save</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="save_label">Saved Notes</string>
+</resources>
