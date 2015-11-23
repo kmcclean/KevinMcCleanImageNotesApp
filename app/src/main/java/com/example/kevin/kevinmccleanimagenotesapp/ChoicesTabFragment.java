@@ -31,8 +31,80 @@ public class ChoicesTabFragment extends Fragment implements View.OnClickListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+    }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.choice_tab_fragment, container, false);
+        mImages = (TextView) v.findViewById(R.id.image_tv);
+        mText = (TextView) v.findViewById(R.id.text_tv);
+        mSaved = (TextView) v.findViewById(R.id.saved_tv);
         mImages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("ChoicesTabFragment", "mImages.onClick accessed.");
+                mListener.onChoicesFragmentSelection(CAMERA_FRAGMENT);
+                //TODO When pressed, the program should switch the camera fragment.
+
+            }
+        });
+
+        mText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("ChoicesTabFragment", "mText.onClick accessed.");
+                //TODO When pressed, the program should switch the text fragment.
+                mListener.onChoicesFragmentSelection(TEXT_FRAGMENT);
+            }
+        });
+
+        mSaved.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("ChoicesTabFragment", "mSaved.onClick accessed.");
+                //TODO When pressed, the program should switch the saved fragment.
+                mListener.onChoicesFragmentSelection(SAVED_FRAGMENT);
+            }
+        });
+
+        return v;
+    }
+    @Override
+    public void onClick(View v) {
+        Log.e("ChoicesTabFragment", "onClick is being accessed.");
+        mImages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("ChoicesTabFragment", "mImages.onClick accessed.");
+                mListener.onChoicesFragmentSelection(CAMERA_FRAGMENT);
+                //TODO When pressed, the program should switch the camera fragment.
+
+            }
+        });
+
+        mText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("ChoicesTabFragment", "mText.onClick accessed.");
+                //TODO When pressed, the program should switch the text fragment.
+                mListener.onChoicesFragmentSelection(TEXT_FRAGMENT);
+            }
+        });
+
+        mSaved.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("ChoicesTabFragment", "mSaved.onClick accessed.");
+                //TODO When pressed, the program should switch the saved fragment.
+                mListener.onChoicesFragmentSelection(SAVED_FRAGMENT);
+            }
+        });
+    }
+
+    public void setmListener(OnChoicesFragmentSelectedListener listener){
+        this.mListener = listener;
+        /*mImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.onChoicesFragmentSelection(CAMERA_FRAGMENT);
@@ -55,22 +127,7 @@ public class ChoicesTabFragment extends Fragment implements View.OnClickListener
                 //TODO When pressed, the program should switch the saved fragment.
                 mListener.onChoicesFragmentSelection(SAVED_FRAGMENT);
             }
-        });
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.choice_tab_fragment, container, false);
-        mImages = (TextView) v.findViewById(R.id.image_tv);
-        mText = (TextView) v.findViewById(R.id.text_tv);
-        mSaved = (TextView) v.findViewById(R.id.saved_tv);
-        return v;
-    }
-
-    @Override
-    public void onClick(View v) {
-
+        });*/
     }
 
     public interface OnChoicesFragmentSelectedListener{

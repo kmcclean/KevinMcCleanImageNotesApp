@@ -29,6 +29,15 @@ public class OptionsFragment extends Fragment implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.new_note_options_fragment, container, false);
+        mHashTagEditText = (EditText)v.findViewById(R.id.hash_tag_et);
+        mTakePictureButton = (Button)v.findViewById(R.id.take_picture_button);
+        mSaveButton = (Button)v.findViewById(R.id.save_button);
         mTakePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,21 +53,12 @@ public class OptionsFragment extends Fragment implements View.OnClickListener{
                 //TODO when this button is pressed, the system will check to see if there information in the hashtag, and that there is either a picture taken or a TextNote written. If so, it will send the information to the MainActivity in order to save the note
             }
         });
-    }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.new_note_options_fragment, container, false);
-        mHashTagEditText = (EditText)v.findViewById(R.id.hash_tag_et);
-        mTakePictureButton = (Button)v.findViewById(R.id.take_picture_button);
-        mSaveButton = (Button)v.findViewById(R.id.save_button);
         return v;
     }
 
     @Override
     public void onClick(View v) {
-
     }
 
     @Override

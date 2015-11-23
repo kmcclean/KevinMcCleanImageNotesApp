@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -36,9 +37,10 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         ft = fm.beginTransaction();
         ChoicesTabFragment ctf = new ChoicesTabFragment();
         OptionsFragment of = new OptionsFragment();
-        ImageNoteDisplayFragment indf = new ImageNoteDisplayFragment();
+        TextNoteDisplayFragment tndf = new TextNoteDisplayFragment();
         ft.add(R.id.top_frame, ctf, CHOICES_FRAGMENT_TAG);
-        ft.add(R.id.middle_frame, indf, IMAGE_FRAGMENT_TAG);
+        ctf.setmListener(this);
+        ft.add(R.id.middle_frame, tndf, TEXT_FRAGMENT_TAG);
         ft.add(R.id.bottom_frame, of, OPTIONS_FRAGMENT_TAG);
         ft.addToBackStack(null);
         ft.commit();
@@ -74,12 +76,13 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
     }
 
 
+
     //This controls what happens when buttons are pressed in the OptionsFragment. It is used to send and receive information between multiple fragments.
     @Override
     public void onChoicesFragmentSelection(Integer event) {
         //TODO switch which of the three main fragments are being displayed.
-
         //this sets the event to the image fragment, and makes sure that the optionsFragment is showing.
+        Log.e("MainActivity", "inOnChoicesFragmentSelection, before if statements. Integer event = " + event.toString());
         if(event == IMAGE_FRAGMENT){
             Fragment mf = getFragmentManager().findFragmentById(R.id.middle_frame);
             if(!mf.getTag().equals(IMAGE_FRAGMENT_TAG)) {
