@@ -5,4 +5,6 @@
     <string name="save_button">Save</string>
     <string name="take_picture">Take Picture</string>
     <string name="save_label">Saved Notes</string>
+    <string name ="delete_button">Delete</string>
+    <string name ="cancel_button">Cancel</string>
 </resources>

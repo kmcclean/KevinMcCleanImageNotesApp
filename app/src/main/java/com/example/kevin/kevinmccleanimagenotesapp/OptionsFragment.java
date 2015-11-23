@@ -1,16 +1,18 @@
 package com.example.kevin.kevinmccleanimagenotesapp;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-//
+//This displays the buttons at the bottom of the screen for the ImageNoteDisplayFragment and the TextNoteDisplayFragment.
 public class OptionsFragment extends Fragment implements View.OnClickListener{
 
     EditText mHashTagEditText;
@@ -57,7 +59,33 @@ public class OptionsFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v) {
 
+    }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try{
+            mListener = (OnOptionFragmentSelectedListener) context;
+        }
+        catch (ClassCastException e){
+            Log.e(e.toString(), "Must attach ChoicesTabFragment");
+        }
+    }
+
+    public void makeTakePictureButtonAppear(){
+        if(mTakePictureButton.getVisibility() == View.INVISIBLE){
+            mTakePictureButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void makeTakePictureButtonDisappear(){
+        if(mTakePictureButton.getVisibility() == View.VISIBLE){
+            mTakePictureButton.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public String getmHashTagEditText() {
+        return mHashTagEditText.toString();
     }
 
     public interface OnOptionFragmentSelectedListener {

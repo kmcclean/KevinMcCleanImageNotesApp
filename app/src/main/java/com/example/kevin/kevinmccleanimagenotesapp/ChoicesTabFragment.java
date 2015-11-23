@@ -1,9 +1,11 @@
 package com.example.kevin.kevinmccleanimagenotesapp;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,5 +75,16 @@ public class ChoicesTabFragment extends Fragment implements View.OnClickListener
 
     public interface OnChoicesFragmentSelectedListener{
         public void onChoicesFragmentSelection(Integer event);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try{
+            mListener = (OnChoicesFragmentSelectedListener) context;
+        }
+        catch (ClassCastException e){
+            Log.e(e.toString(), "Must attach ChoicesTabFragment");
+        }
     }
 }

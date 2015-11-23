@@ -19,9 +19,7 @@ import android.widget.Toast;
 
 import java.io.File;
 
-/**
- * Created by Kevin on 11/16/2015.
- */
+//This display allows the user to take a picture with their phone, which they then have the option of saving.
 public class ImageNoteDisplayFragment extends Fragment implements View.OnClickListener{
 
     Button takePictureButton;
@@ -42,26 +40,6 @@ public class ImageNoteDisplayFragment extends Fragment implements View.OnClickLi
         if (savedInstanceState != null) {
             pictureToDisplay = savedInstanceState.getBoolean(PICTURE_TO_DISPLAY, false);
         }
-
-
-        takePictureButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-                File file = new File(Environment.getExternalStorageDirectory(), filename);
-                imageFileUri = Uri.fromFile(file);
-
-                pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageFileUri);
-
-                if (pictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                    startActivityForResult(pictureIntent, TAKE_PICTURE_REQUEST);
-                } else {
-                    Toast.makeText(getActivity(), "No camera available", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
 
     }
 
@@ -87,6 +65,21 @@ public class ImageNoteDisplayFragment extends Fragment implements View.OnClickLi
             getActivity().sendBroadcast(mediaScanIntent);
         } else {
             pictureToDisplay = false;
+        }
+    }
+
+    public void takePicture(){
+        Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        File file = new File(Environment.getExternalStorageDirectory(), filename);
+        imageFileUri = Uri.fromFile(file);
+
+        pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageFileUri);
+
+        if (pictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(pictureIntent, TAKE_PICTURE_REQUEST);
+        } else {
+            Toast.makeText(getActivity(), "No camera available", Toast.LENGTH_SHORT).show();
         }
     }
 
