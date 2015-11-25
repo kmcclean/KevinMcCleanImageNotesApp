@@ -2,7 +2,6 @@ package com.example.kevin.kevinmccleanimagenotesapp;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -61,6 +60,11 @@ public class OptionsFragment extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
     }
 
+    public void setmListener(OnOptionFragmentSelectedListener listener){
+        this.mListener = listener;
+
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -89,6 +93,6 @@ public class OptionsFragment extends Fragment implements View.OnClickListener{
     }
 
     public interface OnOptionFragmentSelectedListener {
-        public void onOptionsFragmentButtonSelected(Integer event);
+        void onOptionsFragmentButtonSelected(Integer event);
     }
 }

@@ -2,7 +2,6 @@ package com.example.kevin.kevinmccleanimagenotesapp;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -72,66 +71,15 @@ public class ChoicesTabFragment extends Fragment implements View.OnClickListener
     }
     @Override
     public void onClick(View v) {
-        Log.e("ChoicesTabFragment", "onClick is being accessed.");
-        mImages.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e("ChoicesTabFragment", "mImages.onClick accessed.");
-                mListener.onChoicesFragmentSelection(CAMERA_FRAGMENT);
-                //TODO When pressed, the program should switch the camera fragment.
-
-            }
-        });
-
-        mText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e("ChoicesTabFragment", "mText.onClick accessed.");
-                //TODO When pressed, the program should switch the text fragment.
-                mListener.onChoicesFragmentSelection(TEXT_FRAGMENT);
-            }
-        });
-
-        mSaved.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e("ChoicesTabFragment", "mSaved.onClick accessed.");
-                //TODO When pressed, the program should switch the saved fragment.
-                mListener.onChoicesFragmentSelection(SAVED_FRAGMENT);
-            }
-        });
     }
 
     public void setmListener(OnChoicesFragmentSelectedListener listener){
         this.mListener = listener;
-        /*mImages.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onChoicesFragmentSelection(CAMERA_FRAGMENT);
-                //TODO When pressed, the program should switch the camera fragment.
 
-            }
-        });
-
-        mText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO When pressed, the program should switch the text fragment.
-                mListener.onChoicesFragmentSelection(TEXT_FRAGMENT);
-            }
-        });
-
-        mSaved.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO When pressed, the program should switch the saved fragment.
-                mListener.onChoicesFragmentSelection(SAVED_FRAGMENT);
-            }
-        });*/
     }
 
     public interface OnChoicesFragmentSelectedListener{
-        public void onChoicesFragmentSelection(Integer event);
+        void onChoicesFragmentSelection(Integer event);
     }
 
     @Override

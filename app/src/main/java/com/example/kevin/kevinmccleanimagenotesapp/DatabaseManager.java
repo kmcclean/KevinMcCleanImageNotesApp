@@ -22,7 +22,7 @@ public class DatabaseManager {
     protected static final String NOTE_ID = "NOTE_ID";
     protected static final String HASH_TAGS = "hash_tags";
     protected static final String NOTE_TEXT = "note_text";
-    protected static final String NOTE_TYPE = "image?";
+    protected static final String NOTE_TYPE = "image";
 
     private static final String DBTAG = "DatabaseManager";
     private static final String SQLTAG = "SQLHelper";
@@ -48,7 +48,7 @@ public class DatabaseManager {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            String createTable = "CREATE TABLE " + DB_TABLE + " (" + NOTE_ID + " TEXT, "  + NOTE_TEXT + " TEXT, " + HASH_TAGS + " TEXT, " + NOTE_TYPE + "INTEGER);";
+            String createTable = "CREATE TABLE " + DB_TABLE + " (" + NOTE_ID + " TEXT, "  + NOTE_TEXT + " TEXT, " + HASH_TAGS + " TEXT);";//, " + NOTE_TYPE + " INTEGER);";
             db.execSQL(createTable);
         }
 
@@ -80,7 +80,7 @@ public class DatabaseManager {
         newRow.put(NOTE_ID, rowID);
         newRow.put(HASH_TAGS, hashTags);
         newRow.put(NOTE_TEXT, noteText);
-        newRow.put(NOTE_TYPE, isPicture);
+        //newRow.put(NOTE_TYPE, isPicture);
         try {
             db.insertOrThrow(DB_TABLE, null, newRow);
             return true;
