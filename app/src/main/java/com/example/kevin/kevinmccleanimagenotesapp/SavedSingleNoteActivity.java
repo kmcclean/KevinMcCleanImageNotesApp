@@ -12,6 +12,7 @@ public class SavedSingleNoteActivity extends AppCompatActivity implements SavedS
     FragmentTransaction ft;
     DatabaseManager mDBM;
 
+    private final String NOTE_TEXT = "the_note's_text";
     private final String TEXT_NOTE_FRAME_TAG = "text_note_frame";
     private final String OPTIONS_FRAME_TAG = "options_frame";
     private final int SAVE = 0;
@@ -25,10 +26,16 @@ public class SavedSingleNoteActivity extends AppCompatActivity implements SavedS
 
         fm = getFragmentManager();
         ft = fm.beginTransaction();
+
         TextNoteDisplayFragment tndf = new TextNoteDisplayFragment();
+        Bundle b = new Bundle();
+        b.putString("text", getIntent().getStringExtra(NOTE_TEXT));
+        tndf.setArguments(b);
+
         SavedSingleNoteOptionsFragment ssnof = new SavedSingleNoteOptionsFragment();
-        ft.replace(R.id.note_frame, tndf, TEXT_NOTE_FRAME_TAG);
-        ft.replace(R.id.options_frame, ssnof, OPTIONS_FRAME_TAG);
+        ft.add(R.id.note_frame, tndf, TEXT_NOTE_FRAME_TAG);
+        ft.add(R.id.options_frame, ssnof, OPTIONS_FRAME_TAG);
+        ft.addToBackStack(null);
         ft.commit();
     }
 

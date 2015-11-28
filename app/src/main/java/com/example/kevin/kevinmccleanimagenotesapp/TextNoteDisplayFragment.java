@@ -4,10 +4,13 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+
+import java.util.ArrayList;
 
 //This class is to show what the
 public class TextNoteDisplayFragment extends Fragment {
@@ -24,6 +27,6 @@ public class TextNoteDisplayFragment extends Fragment {
     }
 
     public String getmTextNote() {
-        return mTextNote.toString();
+        return mTextNote.getText().toString();
     }
 }

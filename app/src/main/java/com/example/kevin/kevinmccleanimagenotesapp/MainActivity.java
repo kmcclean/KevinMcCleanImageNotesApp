@@ -5,8 +5,10 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements OptionsFragment.OnOptionFragmentSelectedListener, ChoicesTabFragment.OnChoicesFragmentSelectedListener{
@@ -21,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
     private final String OPTIONS_FRAGMENT_TAG = "options_fragment";
     private final String SAVED_OPTIONS_FRAGMENT_TAG = "saved_options_fragment_tag";
     private final String CHOICES_FRAGMENT_TAG = "choices_fragment";
-
+    private final String NOTE_LIST = "note_list";
 
     FragmentManager fm;
     FragmentTransaction ft;
@@ -54,18 +56,19 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         if(event == SAVE){
             Date d = new Date();
             String noteID = Long.toString(d.getTime());
-
             Fragment save = getFragmentManager().findFragmentById(R.id.middle_frame);
+
             if(save.getTag().equals(IMAGE_FRAGMENT_TAG)){
                 ImageNoteDisplayFragment imageNoteDisplayFragment = (ImageNoteDisplayFragment)getFragmentManager().findFragmentById(R.id.middle_frame);
                 OptionsFragment optionsFragment = (OptionsFragment)getFragmentManager().findFragmentById(R.id.bottom_frame);
                 String hashTags = optionsFragment.getmHashTagEditText();
                 mDBM.addRow(noteID, hashTags, null, 1);
             }
+
             else if(save.getTag().equals(TEXT_FRAGMENT_TAG)){
                 TextNoteDisplayFragment textNoteDisplayFragment = (TextNoteDisplayFragment)getFragmentManager().findFragmentById(R.id.middle_frame);
                 String noteText = textNoteDisplayFragment.getmTextNote();
-                if(noteText.equals(null)){
+                if(noteText.equals("")){
                     Toast.makeText(MainActivity.this, "Please enter a note to save.", Toast.LENGTH_SHORT).show();
                 }
                 OptionsFragment optionsFragment = (OptionsFragment)getFragmentManager().findFragmentById(R.id.bottom_frame);
@@ -86,61 +89,64 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         }
     }
 
-
-
     //This controls what happens when buttons are pressed in the OptionsFragment. It is used to send and receive information between multiple fragments.
     @Override
     public void onChoicesFragmentSelection(Integer event) {
         //this sets the event to the image fragment, and makes sure that the optionsFragment is showing.
-        FragmentTransaction ft = fm.beginTransaction();
-        if(event == IMAGE_FRAGMENT){
-            Fragment mf = getFragmentManager().findFragmentById(R.id.middle_frame);
-            if(!mf.getTag().equals(IMAGE_FRAGMENT_TAG)) {
-                //TODO set the OptionsFragment to appear.
-                Fragment bf = getFragmentManager().findFragmentById(R.id.bottom_frame);
-                if(!bf.getTag().equals(OPTIONS_FRAGMENT_TAG)){
-                    ft = fm.beginTransaction();
-                    OptionsFragment of = new OptionsFragment();
-                    ft.replace(R.id.bottom_frame, of, OPTIONS_FRAGMENT_TAG);
-                    ft.commit();
-                }
-                OptionsFragment optionsFragment = (OptionsFragment) getFragmentManager().findFragmentById(R.id.bottom_frame);
-                optionsFragment.makeTakePictureButtonAppear();
-                optionsFragment.setmListener(this);
-                ImageNoteDisplayFragment indf = new ImageNoteDisplayFragment();
-                ft.replace(R.id.middle_frame, indf, IMAGE_FRAGMENT_TAG);
-                ft.commit();
-            }
+        Fragment mf = getFragmentManager().findFragmentById(R.id.middle_frame);
+        if (event == IMAGE_FRAGMENT && !mf.getTag().equals(IMAGE_FRAGMENT_TAG)) {
+            ft = fm.beginTransaction();
+            ImageNoteDisplayFragment indf = new ImageNoteDisplayFragment();
+            ft.replace(R.id.middle_frame, indf, IMAGE_FRAGMENT_TAG);
+            ft.commit();
+            optionFragmentSetUp(false, true);
         }
-        else if(event == TEXT_FRAGMENT){
-            //TODO set the OptionsFragment to appear.
-            Fragment mf = getFragmentManager().findFragmentById(R.id.middle_frame);
-            if(!mf.getTag().equals(TEXT_FRAGMENT_TAG)) {
-                Fragment bf = getFragmentManager().findFragmentById(R.id.bottom_frame);
-                if(!bf.getTag().equals(OPTIONS_FRAGMENT_TAG)){
-                    ft = fm.beginTransaction();
-                    OptionsFragment of = new OptionsFragment();
-                    ft.replace(R.id.bottom_frame, of, OPTIONS_FRAGMENT_TAG);
-                    ft.commit();
-                }
-                OptionsFragment optionsFragment = (OptionsFragment) getFragmentManager().findFragmentById(R.id.bottom_frame);
-                optionsFragment.makeTakePictureButtonDisappear();
-                optionsFragment.setmListener(this);
-                TextNoteDisplayFragment tndf = new TextNoteDisplayFragment();
-                ft.replace(R.id.middle_frame, tndf, TEXT_FRAGMENT_TAG);
-                ft.commit();
-            }
+        else if (event == TEXT_FRAGMENT && !mf.getTag().equals(TEXT_FRAGMENT_TAG)) {
+            ft = fm.beginTransaction();
+            TextNoteDisplayFragment tndf = new TextNoteDisplayFragment();
+            ft.replace(R.id.middle_frame, tndf, TEXT_FRAGMENT_TAG);
+            ft.commit();
+            optionFragmentSetUp(false, false);
         }
-        else if(event == SAVED_FRAGMENT){
-            Fragment mf = getFragmentManager().findFragmentById(R.id.middle_frame);
-            if(!mf.getTag().equals(SAVED_FRAGMENT_TAG)) {
-                ft = fm.beginTransaction();
-                SavedNoteDisplayFragment sndf = new SavedNoteDisplayFragment();
+        else if (event == SAVED_FRAGMENT && !mf.getTag().equals(SAVED_FRAGMENT_TAG)) {
+            ft = fm.beginTransaction();
+            SavedNoteDisplayFragment sndf = new SavedNoteDisplayFragment();
+            ArrayList<Notes> notesList = mDBM.fetchAll();
+            ArrayList<String> notes = new ArrayList<>();
+            for(Notes n: notesList){
+                notes.add(n.getNoteText());
+            }
+            Bundle b = new Bundle();
+            b.putStringArrayList(NOTE_LIST, notes);
+            sndf.setArguments(b);
+            ft.replace(R.id.middle_frame, sndf, SAVED_FRAGMENT_TAG);
+            ft.commit();
+            optionFragmentSetUp(true, false);
+        }
+    }
+
+    public void optionFragmentSetUp(boolean isSaved, boolean appear) {
+        try {
+            ft = fm.beginTransaction();
+            if (isSaved){
                 SavedNoteGridOptionsFragment sngof = new SavedNoteGridOptionsFragment();
-                ft.replace(R.id.middle_frame, sndf, SAVED_FRAGMENT_TAG);
                 ft.replace(R.id.bottom_frame, sngof, SAVED_OPTIONS_FRAGMENT_TAG);
                 ft.commit();
             }
+            else {
+                OptionsFragment of = new OptionsFragment();
+                of.setmListener(this);
+                ft.replace(R.id.bottom_frame, of, OPTIONS_FRAGMENT_TAG);
+                ft.commit();
+                if (appear) {
+                    of.makeTakePictureButtonAppear();
+                } else {
+                    of.makeTakePictureButtonDisappear();
+                }
+            }
+        }
+        catch (Exception e){
+            Log.e("MainActivity", e.toString() + " in optionsFragmentSetUp method.");
         }
     }
 }

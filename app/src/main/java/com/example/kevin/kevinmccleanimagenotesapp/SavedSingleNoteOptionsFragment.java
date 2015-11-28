@@ -28,6 +28,16 @@ public class SavedSingleNoteOptionsFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
 
+
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.saved_single_note_options_fragment, container, false);
+        mSaveButton = (Button)v.findViewById(R.id.single_note_save);
+        mDeleteButton = (Button)v.findViewById(R.id.delete_button);
+        mCancelButton = (Button)v.findViewById(R.id.cancel_button);
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,20 +58,11 @@ public class SavedSingleNoteOptionsFragment extends Fragment {
                 mListener.onSingleNoteOptionsChoiceListener(CANCEL, null);
             }
         });
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.saved_single_note_options_fragment, container, false);
-        mSaveButton = (Button)v.findViewById(R.id.single_note_save);
-        mDeleteButton = (Button)v.findViewById(R.id.delete_button);
-        mCancelButton = (Button)v.findViewById(R.id.cancel_button);
         return v;
     }
 
     public interface OnSingleNoteOptionsChoiceListener{
-        public void onSingleNoteOptionsChoiceListener(Integer event, String rowID);
+        void onSingleNoteOptionsChoiceListener(Integer event, String rowID);
     }
 
     @Override

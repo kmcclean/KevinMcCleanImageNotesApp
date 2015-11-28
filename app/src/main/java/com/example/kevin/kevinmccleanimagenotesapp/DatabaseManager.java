@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 //This controls the database that stores all of the saved notes.
 public class DatabaseManager {
 
@@ -37,9 +39,7 @@ public class DatabaseManager {
         helper.close(); //Closes the database - very important!
     }
 
-    //TODO add method to fetch all data
-    //TODO add method to search for a contact by name
-    //TODO add method to add a name and phone number
+
 
     public class SQLHelper extends SQLiteOpenHelper {
         public SQLHelper(Context c) {
@@ -50,6 +50,7 @@ public class DatabaseManager {
         public void onCreate(SQLiteDatabase db) {
             String createTable = "CREATE TABLE " + DB_TABLE + " (" + NOTE_ID + " TEXT, "  + NOTE_TEXT + " TEXT, " + HASH_TAGS + " TEXT);";//, " + NOTE_TYPE + " INTEGER);";
             db.execSQL(createTable);
+            db.execSQL("DELETE FROM " + DB_TABLE);
         }
 
         @Override
@@ -60,19 +61,25 @@ public class DatabaseManager {
         }
     }
 
-    public String fetchAll() {
-        String cols[] = {NOTE_ID, HASH_TAGS, NOTE_TEXT, NOTE_TYPE};
+    public ArrayList<Notes> fetchAll() {
+        String cols[] = {NOTE_ID, HASH_TAGS, NOTE_TEXT};//, NOTE_TYPE};
         Cursor cursor = db.query(DB_TABLE, cols, null, null, null, null, HASH_TAGS);
+        ArrayList<String> notes = new ArrayList<>();
+        ArrayList<Notes> notesList = new ArrayList<>();
         cursor.moveToFirst();
-        String tableRows = "";
         while (!cursor.isAfterLast()) {
-            tableRows = tableRows + "Name: " + cursor.getString(0) + " Phone: " + cursor.getLong(1) + "\n";
+            String id = cursor.getString(0);
+            String hashTag = cursor.getString(1);
+            String noteText = cursor.getString(2);
+            Notes newNote = new Notes(cursor.getString(0), cursor.getString(1), cursor.getString(2), false);
+            notes.add(cursor.getString(2).toString());
+            notesList.add(newNote);
             cursor.moveToNext();
         }
         if (!cursor.isClosed()) {
             cursor.close();
         }
-        return tableRows;
+        return notesList;
     }
 
     public boolean addRow(String rowID, String hashTags, String noteText, Integer isPicture) {

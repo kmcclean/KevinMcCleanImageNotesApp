@@ -3,10 +3,9 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/note_text_et"
+    <TextView
+        android:id="@+id/note_list_text_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
-
 
 </LinearLayout>
