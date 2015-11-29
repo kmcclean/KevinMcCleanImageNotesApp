@@ -31,4 +31,8 @@ public class Notes {
     public String getNoteText() {
         return noteText;
     }
+
+    public String getNoteID() {
+        return noteID;
+    }
 }

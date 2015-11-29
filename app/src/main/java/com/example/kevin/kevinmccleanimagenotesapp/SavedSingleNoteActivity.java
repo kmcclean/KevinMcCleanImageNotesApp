@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
 public class SavedSingleNoteActivity extends AppCompatActivity implements SavedSingleNoteOptionsFragment.OnSingleNoteOptionsChoiceListener{
 
@@ -13,6 +14,9 @@ public class SavedSingleNoteActivity extends AppCompatActivity implements SavedS
     DatabaseManager mDBM;
 
     private final String NOTE_TEXT = "the_note's_text";
+    private final String NOTE_ID = "this is the note id.";
+    private final String HASH_TAGS = "this is the hash tags.";
+
     private final String TEXT_NOTE_FRAME_TAG = "text_note_frame";
     private final String OPTIONS_FRAME_TAG = "options_frame";
     private final int SAVE = 0;
@@ -20,19 +24,24 @@ public class SavedSingleNoteActivity extends AppCompatActivity implements SavedS
     private final int CANCEL = 2;
 
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_saved_note);
-
         fm = getFragmentManager();
         ft = fm.beginTransaction();
 
-        SingleTextNoteDisplayFragment tndf = new SingleTextNoteDisplayFragment();
-        Bundle b = new Bundle();
-        b.putString("text", getIntent().getStringExtra(NOTE_TEXT));
-        tndf.setArguments(b);
+        SingleTextNoteDisplayFragment stndf = new SingleTextNoteDisplayFragment();
+        Bundle stndfBundle = new Bundle();
+        stndfBundle.putString(NOTE_TEXT, getIntent().getStringExtra(NOTE_TEXT));
+        stndf.setArguments(stndfBundle);
+
         SavedSingleNoteOptionsFragment ssnof = new SavedSingleNoteOptionsFragment();
-        ft.add(R.id.note_frame, tndf, TEXT_NOTE_FRAME_TAG);
+        ssnof.setSSNOFListener(this);
+        Bundle ssnofBundle = new Bundle();
+        ssnofBundle.putString(HASH_TAGS, getIntent().getStringExtra(HASH_TAGS));
+        ssnof.setArguments(ssnofBundle);
+
+        ft.add(R.id.note_frame, stndf, TEXT_NOTE_FRAME_TAG);
         ft.add(R.id.options_frame, ssnof, OPTIONS_FRAME_TAG);
         ft.addToBackStack(null);
         ft.commit();
@@ -43,14 +52,12 @@ public class SavedSingleNoteActivity extends AppCompatActivity implements SavedS
         if (event == SAVE){
             mDBM.updateRow(rowID);
             finish();
-
         }
         else if (event == DELETE){
             mDBM.deleteRow(rowID);
             finish();
         }
         else if(event == CANCEL){
-
             finish();
         }
     }

@@ -72,7 +72,6 @@ public class ChoicesTabFragment extends Fragment implements View.OnClickListener
 
     public void setmListener(OnChoicesFragmentSelectedListener listener){
         this.mListener = listener;
-
     }
 
     public interface OnChoicesFragmentSelectedListener{

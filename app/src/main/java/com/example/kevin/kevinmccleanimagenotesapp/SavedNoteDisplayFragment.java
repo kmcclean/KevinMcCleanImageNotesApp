@@ -12,15 +12,19 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
 public class SavedNoteDisplayFragment extends Fragment{
 
     GridView gv;
-    private final String NOTE_LIST = "note_list";
     private final String NOTE_TEXT = "the_note's_text";
+    private final String NOTE_ID = "this is the note id.";
+    private final String HASH_TAGS = "this is the hash tags.";
+    DatabaseManager mDBM;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,10 +35,9 @@ public class SavedNoteDisplayFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.saved_note_fragment, container, false);
-
-        Bundle b = this.getArguments();
-        ArrayList<String> notes = b.getStringArrayList(NOTE_LIST);
-        SavedNotesAdapter sna = new SavedNotesAdapter(getActivity(), notes);
+        mDBM = new DatabaseManager(getActivity());
+        ArrayList<Notes> notesList = mDBM.fetchAll();
+        SavedNotesAdapter sna = new SavedNotesAdapter(getActivity(), notesList);
 
         gv = (GridView)v.findViewById(R.id.gridView);
         gv.setAdapter(sna);
@@ -43,9 +46,11 @@ public class SavedNoteDisplayFragment extends Fragment{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(getActivity(), SavedSingleNoteActivity.class);
-                Bundle b = new Bundle();
-                i.putExtra(NOTE_TEXT, (String)parent.getItemAtPosition(position));
-                startActivity(i);
+                Notes n = (Notes)parent.getItemAtPosition(position);
+                i.putExtra(NOTE_TEXT, n.getNoteText());
+                i.putExtra(NOTE_ID, n.getNoteID());
+                i.putExtra(HASH_TAGS, n.getHashTag());
+                getActivity().startActivity(i);
 
             }
         });

@@ -13,7 +13,6 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements OptionsFragment.OnOptionFragmentSelectedListener, ChoicesTabFragment.OnChoicesFragmentSelectedListener{
     private final int SAVE = 0;
-    private final int TAKE_PICTURE = 1;
     private final int IMAGE_FRAGMENT = 0;
     private final int TEXT_FRAGMENT = 1;
     private final int SAVED_FRAGMENT = 2;
@@ -36,9 +35,11 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
 
         fm = getFragmentManager();
         ft = fm.beginTransaction();
+
         ChoicesTabFragment ctf = new ChoicesTabFragment();
         OptionsFragment of = new OptionsFragment();
         TextNoteDisplayFragment tndf = new TextNoteDisplayFragment();
+
         ft.add(R.id.top_frame, ctf, CHOICES_FRAGMENT_TAG);
         ctf.setmListener(this);
         ft.add(R.id.middle_frame, tndf, TEXT_FRAGMENT_TAG);
@@ -106,14 +107,14 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         else if (event == SAVED_FRAGMENT && !mf.getTag().equals(SAVED_FRAGMENT_TAG)) {
             ft = fm.beginTransaction();
             SavedNoteDisplayFragment sndf = new SavedNoteDisplayFragment();
-            ArrayList<Notes> notesList = mDBM.fetchAll();
+            /*ArrayList<Notes> notesList = mDBM.fetchAll();
             ArrayList<String> notes = new ArrayList<>();
             for(Notes n: notesList){
                 notes.add(n.getNoteText());
             }
             Bundle b = new Bundle();
             b.putStringArrayList(NOTE_LIST, notes);
-            sndf.setArguments(b);
+            sndf.setArguments(b);*/
             ft.replace(R.id.middle_frame, sndf, SAVED_FRAGMENT_TAG);
             ft.commit();
             optionFragmentSetUp(true, false);
