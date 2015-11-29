@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SavedSingleNoteActivity extends AppCompatActivity implements SavedSingleNoteOptionsFragment.OnSingleNoteOptionsChoiceListener{
 
@@ -27,6 +28,7 @@ public class SavedSingleNoteActivity extends AppCompatActivity implements SavedS
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_saved_note);
+        mDBM = new DatabaseManager(this);
         fm = getFragmentManager();
         ft = fm.beginTransaction();
 
@@ -39,6 +41,7 @@ public class SavedSingleNoteActivity extends AppCompatActivity implements SavedS
         ssnof.setSSNOFListener(this);
         Bundle ssnofBundle = new Bundle();
         ssnofBundle.putString(HASH_TAGS, getIntent().getStringExtra(HASH_TAGS));
+        ssnofBundle.putString(NOTE_ID, getIntent().getStringExtra(NOTE_ID));
         ssnof.setArguments(ssnofBundle);
 
         ft.add(R.id.note_frame, stndf, TEXT_NOTE_FRAME_TAG);
@@ -54,8 +57,14 @@ public class SavedSingleNoteActivity extends AppCompatActivity implements SavedS
             finish();
         }
         else if (event == DELETE){
-            mDBM.deleteRow(rowID);
-            finish();
+            if(mDBM.deleteRow(rowID)){
+                Toast.makeText(SavedSingleNoteActivity.this, "Row deleted.", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+            else{
+                Toast.makeText(SavedSingleNoteActivity.this, "Row not deleted.", Toast.LENGTH_SHORT).show();
+            }
+
         }
         else if(event == CANCEL){
             finish();

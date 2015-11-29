@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements OptionsFragment.OnOptionFragmentSelectedListener, ChoicesTabFragment.OnChoicesFragmentSelectedListener{
@@ -55,8 +55,8 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
     @Override
     public void onOptionsFragmentButtonSelected(Integer event) {
         if(event == SAVE){
-            Date d = new Date();
-            String noteID = Long.toString(d.getTime());
+            Long l = java.util.Calendar.getInstance().getTimeInMillis();
+            String noteID = l.toString();
             Fragment save = getFragmentManager().findFragmentById(R.id.middle_frame);
 
             if(save.getTag().equals(IMAGE_FRAGMENT_TAG)){
@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
                 if(mDBM.addRow(noteID, hashTags, noteText, 0)){
                     Toast.makeText(MainActivity.this, "Note added to database.", Toast.LENGTH_SHORT).show();
                     textNoteDisplayFragment.mTextNote.setText("");
+                    optionsFragment.mHashTagEditText.setText("");
                 }
                 else{
                     Toast.makeText(MainActivity.this, "Adding note failed.", Toast.LENGTH_SHORT).show();
@@ -107,14 +108,6 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         else if (event == SAVED_FRAGMENT && !mf.getTag().equals(SAVED_FRAGMENT_TAG)) {
             ft = fm.beginTransaction();
             SavedNoteDisplayFragment sndf = new SavedNoteDisplayFragment();
-            /*ArrayList<Notes> notesList = mDBM.fetchAll();
-            ArrayList<String> notes = new ArrayList<>();
-            for(Notes n: notesList){
-                notes.add(n.getNoteText());
-            }
-            Bundle b = new Bundle();
-            b.putStringArrayList(NOTE_LIST, notes);
-            sndf.setArguments(b);*/
             ft.replace(R.id.middle_frame, sndf, SAVED_FRAGMENT_TAG);
             ft.commit();
             optionFragmentSetUp(true, false);

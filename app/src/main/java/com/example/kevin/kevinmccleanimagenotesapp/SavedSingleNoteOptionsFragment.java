@@ -22,9 +22,10 @@ public class SavedSingleNoteOptionsFragment extends Fragment {
     private final int DELETE = 1;
     private final int CANCEL = 2;
 
-    private final String HASH_TAGS = "this is the hash tags.";
-
     String rowID;
+    private final String HASH_TAGS = "this is the hash tags.";
+    private final String NOTE_ID = "this is the note id.";
+
     OnSingleNoteOptionsChoiceListener mListener;
 
     @Override
@@ -46,14 +47,20 @@ public class SavedSingleNoteOptionsFragment extends Fragment {
 
         Bundle b = this.getArguments();
         mHashTagEditText.setText(b.getString(HASH_TAGS));
+        rowID = b.getString(NOTE_ID);
 
+        //this will save the changes made to the note by the user.
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //This needs to get the text from both the hashTagEditText and the NoteText and send it along to be updated.
+                mHashTagEditText.getText();
+                SingleTextNoteDisplayFragment sn = new SingleTextNoteDisplayFragment();
                 mListener.onSingleNoteOptionsChoiceListener(SAVE, rowID);
             }
         });
 
+        //this will delete the changes made to the note by the user.
         mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,6 +68,7 @@ public class SavedSingleNoteOptionsFragment extends Fragment {
             }
         });
 
+        //this will cancel doing anything to the note.
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

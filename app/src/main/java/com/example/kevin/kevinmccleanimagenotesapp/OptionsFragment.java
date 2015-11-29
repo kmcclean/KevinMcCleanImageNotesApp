@@ -68,7 +68,7 @@ public class OptionsFragment extends Fragment implements View.OnClickListener{
     }
 
     public String getmHashTagEditText() {
-        return mHashTagEditText.toString();
+        return mHashTagEditText.getText().toString();
     }
 
     public interface OnOptionFragmentSelectedListener {

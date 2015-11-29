@@ -42,7 +42,6 @@ public class ChoicesTabFragment extends Fragment implements View.OnClickListener
         mImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("ChoicesTabFragment", "mImages.onClick accessed.");
                 mListener.onChoicesFragmentSelection(CAMERA_FRAGMENT);
 
             }
@@ -51,7 +50,6 @@ public class ChoicesTabFragment extends Fragment implements View.OnClickListener
         mText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("ChoicesTabFragment", "mText.onClick accessed.");
                 mListener.onChoicesFragmentSelection(TEXT_FRAGMENT);
             }
         });
@@ -59,7 +57,6 @@ public class ChoicesTabFragment extends Fragment implements View.OnClickListener
         mSaved.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("ChoicesTabFragment", "mSaved.onClick accessed.");
                 mListener.onChoicesFragmentSelection(SAVED_FRAGMENT);
             }
         });

@@ -98,7 +98,7 @@ public class DatabaseManager {
         ContentValues deleteRow = new ContentValues();
         deleteRow.put("removedRow", rowID);
         try{
-            db.delete(DB_TABLE, deleteRow.getAsString("removedRow"), null);
+            db.execSQL("DELETE FROM " + DB_TABLE + " WHERE " + NOTE_ID + " = " + rowID);
             return true;
         }
         catch (Exception e){
@@ -109,7 +109,8 @@ public class DatabaseManager {
 
     public boolean updateRow(String rowID){
         ContentValues upDateRow = new ContentValues();
-        upDateRow.put("updatedColumn", HASH_TAGS);
+        upDateRow.put("updatedColumn1", HASH_TAGS);
+        upDateRow.put("updatedColumn2", NOTE_TEXT);
         try{
             db.update(DB_TABLE, upDateRow, rowID, null);
             return true;

@@ -13,7 +13,7 @@ import android.widget.EditText;
 public class SingleTextNoteDisplayFragment extends Fragment {
 
     EditText mSavedNoteEditText;
-    private final String HASH_TAGS = "this is the hash tags.";
+    private final String NOTE_TEXT = "the_note's_text";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,9 +28,8 @@ public class SingleTextNoteDisplayFragment extends Fragment {
         mSavedNoteEditText = (EditText)v.findViewById(R.id.note_text_et);
         try{
             Bundle b = this.getArguments();
-            String text = b.getString(HASH_TAGS);
+            String text = b.getString(NOTE_TEXT);
             mSavedNoteEditText.setText(text);
-            Log.e("TextNoteDisplayFragment", "Note's chosen.");
         }
         catch(Exception e){
             Log.e("TextNoteDisplayFragment","Note's not chosen yet.");
