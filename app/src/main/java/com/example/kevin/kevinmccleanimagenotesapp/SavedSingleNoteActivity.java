@@ -2,6 +2,7 @@ package com.example.kevin.kevinmccleanimagenotesapp;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
@@ -53,12 +54,19 @@ public class SavedSingleNoteActivity extends AppCompatActivity implements SavedS
     @Override
     public void onSingleNoteOptionsChoiceListener(Integer event, String rowID) {
         if (event == SAVE){
-            mDBM.updateRow(rowID);
+            SingleTextNoteDisplayFragment stndf = (SingleTextNoteDisplayFragment)getFragmentManager().findFragmentById(R.id.note_frame);
+            SavedSingleNoteOptionsFragment ssnof = (SavedSingleNoteOptionsFragment)getFragmentManager().findFragmentById(R.id.options_frame);
+            String newText = stndf.mSavedNoteEditText.getText().toString();
+            String newHash = ssnof.mHashTagEditText.getText().toString();
+            mDBM.updateRow(rowID, newText, newHash);
+            //Intent returnIntent = new Intent();
+            setResult(SAVE);
             finish();
         }
         else if (event == DELETE){
             if(mDBM.deleteRow(rowID)){
                 Toast.makeText(SavedSingleNoteActivity.this, "Row deleted.", Toast.LENGTH_SHORT).show();
+                setResult(DELETE);
                 finish();
             }
             else{
@@ -67,6 +75,7 @@ public class SavedSingleNoteActivity extends AppCompatActivity implements SavedS
 
         }
         else if(event == CANCEL){
+            setResult(CANCEL);
             finish();
         }
     }

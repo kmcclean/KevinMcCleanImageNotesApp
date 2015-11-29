@@ -54,8 +54,6 @@ public class SavedSingleNoteOptionsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //This needs to get the text from both the hashTagEditText and the NoteText and send it along to be updated.
-                mHashTagEditText.getText();
-                SingleTextNoteDisplayFragment sn = new SingleTextNoteDisplayFragment();
                 mListener.onSingleNoteOptionsChoiceListener(SAVE, rowID);
             }
         });

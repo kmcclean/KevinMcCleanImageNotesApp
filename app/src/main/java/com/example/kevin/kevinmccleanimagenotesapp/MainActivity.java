@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         ft.commit();
 
         mDBM = new DatabaseManager(this);
+
     }
 
     //This controls what happens when the optionsFragment button is pressed. It sends and receives data between the Fragments here.

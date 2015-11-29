@@ -19,7 +19,7 @@ public class DatabaseManager {
 
     protected static final String DB_NAME = "notes";
     protected static final int DB_VERSION = 1;
-    protected static final String DB_TABLE = "savedNotes";
+    protected static final String DB_TABLE = "savedNotesTable";
 
     protected static final String NOTE_ID = "NOTE_ID";
     protected static final String HASH_TAGS = "hash_tags";
@@ -31,8 +31,9 @@ public class DatabaseManager {
 
     public DatabaseManager(Context c) {
         this.context = c;
-        helper = new SQLHelper(c);
+        this.helper = new SQLHelper(c);
         this.db = helper.getWritableDatabase();
+//        helper.onCreate(db);
     }
 
     public void close() {
@@ -48,9 +49,9 @@ public class DatabaseManager {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            String createTable = "CREATE TABLE " + DB_TABLE + " (" + NOTE_ID + " TEXT, "  + NOTE_TEXT + " TEXT, " + HASH_TAGS + " TEXT);";//, " + NOTE_TYPE + " INTEGER);";
+            db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE + ";");
+            String createTable = "CREATE TABLE " + DB_TABLE + " (" + NOTE_ID + " TEXT, "  + NOTE_TEXT + " TEXT, " + HASH_TAGS + " TEXT, " + NOTE_TYPE + " INTEGER);";
             db.execSQL(createTable);
-            db.execSQL("DELETE FROM " + DB_TABLE);
         }
 
         @Override
@@ -84,7 +85,7 @@ public class DatabaseManager {
         newRow.put(NOTE_ID, rowID);
         newRow.put(HASH_TAGS, hashTags);
         newRow.put(NOTE_TEXT, noteText);
-        //newRow.put(NOTE_TYPE, isPicture);
+        newRow.put(NOTE_TYPE, isPicture);
         try {
             db.insertOrThrow(DB_TABLE, null, newRow);
             return true;
@@ -94,10 +95,12 @@ public class DatabaseManager {
         }
     }
 
+    //This will delete a row from the table. It is non-paramaterized b/c running it as a parameter was causing the system to delete everything in the database.
     public boolean deleteRow(String rowID){
         ContentValues deleteRow = new ContentValues();
-        deleteRow.put("removedRow", rowID);
+        deleteRow.put(NOTE_ID, rowID);
         try{
+        //    db.delete(DB_TABLE, rowID, null);
             db.execSQL("DELETE FROM " + DB_TABLE + " WHERE " + NOTE_ID + " = " + rowID);
             return true;
         }
@@ -107,10 +110,10 @@ public class DatabaseManager {
         }
     }
 
-    public boolean updateRow(String rowID){
+    public boolean updateRow(String rowID, String newText, String newHash){
         ContentValues upDateRow = new ContentValues();
-        upDateRow.put("updatedColumn1", HASH_TAGS);
-        upDateRow.put("updatedColumn2", NOTE_TEXT);
+        upDateRow.put(NOTE_TEXT, newText);
+        upDateRow.put(HASH_TAGS, newHash);
         try{
             db.update(DB_TABLE, upDateRow, rowID, null);
             return true;

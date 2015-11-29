@@ -18,7 +18,9 @@ public class SavedNoteDisplayFragment extends Fragment{
     private final String NOTE_TEXT = "the_note's_text";
     private final String NOTE_ID = "this is the note id.";
     private final String HASH_TAGS = "this is the hash tags.";
+    private final int CHANGES = 0;
     DatabaseManager mDBM;
+    SavedNotesAdapter sna;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,7 +33,7 @@ public class SavedNoteDisplayFragment extends Fragment{
         View v = inflater.inflate(R.layout.saved_note_fragment, container, false);
         mDBM = new DatabaseManager(getActivity());
         ArrayList<Notes> notesList = mDBM.fetchAll();
-        SavedNotesAdapter sna = new SavedNotesAdapter(getActivity(), notesList);
+        sna = new SavedNotesAdapter(getActivity(), notesList);
 
         gv = (GridView)v.findViewById(R.id.gridView);
         gv.setAdapter(sna);
@@ -44,11 +46,20 @@ public class SavedNoteDisplayFragment extends Fragment{
                 i.putExtra(NOTE_TEXT, n.getNoteText());
                 i.putExtra(NOTE_ID, n.getNoteID());
                 i.putExtra(HASH_TAGS, n.getHashTag());
-                getActivity().startActivity(i);
+                getActivity().startActivityForResult(i, CHANGES);
 
             }
         });
 
         return v;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(resultCode == 0 || resultCode ==1){
+            sna.notifyDataSetChanged();
+        }
+
     }
 }
