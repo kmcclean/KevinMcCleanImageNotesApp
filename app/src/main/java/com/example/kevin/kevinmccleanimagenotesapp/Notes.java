@@ -2,9 +2,6 @@ package com.example.kevin.kevinmccleanimagenotesapp;
 
 import android.graphics.Bitmap;
 
-/**
- * Created by Kevin on 11/27/2015.
- */
 public class Notes {
 
     String noteID;

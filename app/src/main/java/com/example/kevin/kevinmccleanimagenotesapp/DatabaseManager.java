@@ -68,11 +68,8 @@ public class DatabaseManager {
         ArrayList<Notes> notesList = new ArrayList<>();
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            String id = cursor.getString(0);
-            String hashTag = cursor.getString(1);
-            String noteText = cursor.getString(2);
             Notes newNote = new Notes(cursor.getString(0), cursor.getString(1), cursor.getString(2), false);
-            notes.add(cursor.getString(2).toString());
+            notes.add(cursor.getString(2));
             notesList.add(newNote);
             cursor.moveToNext();
         }

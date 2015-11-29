@@ -8,21 +8,22 @@
 
     <FrameLayout
         android:id="@+id/top_frame"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </FrameLayout>
     <FrameLayout
         android:id="@+id/middle_frame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
         android:layout_below="@+id/top_frame">
     </FrameLayout>
     <FrameLayout
         android:id="@+id/bottom_frame"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/middle_frame"
-        android:layout_alignParentBottom="true">
+
+        android:layout_alignParentBottom="true"
+        >
     </FrameLayout>
 
 

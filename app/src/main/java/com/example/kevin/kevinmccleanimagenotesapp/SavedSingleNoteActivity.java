@@ -27,11 +27,10 @@ public class SavedSingleNoteActivity extends AppCompatActivity implements SavedS
         fm = getFragmentManager();
         ft = fm.beginTransaction();
 
-        TextNoteDisplayFragment tndf = new TextNoteDisplayFragment();
+        SingleTextNoteDisplayFragment tndf = new SingleTextNoteDisplayFragment();
         Bundle b = new Bundle();
         b.putString("text", getIntent().getStringExtra(NOTE_TEXT));
         tndf.setArguments(b);
-
         SavedSingleNoteOptionsFragment ssnof = new SavedSingleNoteOptionsFragment();
         ft.add(R.id.note_frame, tndf, TEXT_NOTE_FRAME_TAG);
         ft.add(R.id.options_frame, ssnof, OPTIONS_FRAME_TAG);

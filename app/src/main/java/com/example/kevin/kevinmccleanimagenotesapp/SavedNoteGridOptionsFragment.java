@@ -8,9 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-/**
- * Created by Kevin on 11/22/2015.
- */
 public class SavedNoteGridOptionsFragment extends Fragment {
 
     EditText mSearchField;

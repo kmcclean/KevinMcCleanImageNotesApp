@@ -15,7 +15,6 @@ import android.widget.EditText;
 public class OptionsFragment extends Fragment implements View.OnClickListener{
 
     EditText mHashTagEditText;
-    Button mTakePictureButton;
     Button mSaveButton;
 
     OnOptionFragmentSelectedListener mListener;
@@ -35,15 +34,7 @@ public class OptionsFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.new_note_options_fragment, container, false);
         mHashTagEditText = (EditText)v.findViewById(R.id.hash_tag_et);
-        mTakePictureButton = (Button)v.findViewById(R.id.take_picture_button);
         mSaveButton = (Button)v.findViewById(R.id.save_button);
-        mTakePictureButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onOptionsFragmentButtonSelected(TAKE_PICTURE);
-                //TODO When this happens have a request sent through the MainActivity to have a picture taken by the ImageNoteFragment.
-            }
-        });
 
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,18 +64,6 @@ public class OptionsFragment extends Fragment implements View.OnClickListener{
         }
         catch (ClassCastException e){
             Log.e(e.toString(), "Must attach ChoicesTabFragment");
-        }
-    }
-
-    public void makeTakePictureButtonAppear(){
-        if(mTakePictureButton.getVisibility() == View.INVISIBLE){
-            mTakePictureButton.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void makeTakePictureButtonDisappear(){
-        if(mTakePictureButton.getVisibility() == View.VISIBLE){
-            mTakePictureButton.setVisibility(View.INVISIBLE);
         }
     }
 

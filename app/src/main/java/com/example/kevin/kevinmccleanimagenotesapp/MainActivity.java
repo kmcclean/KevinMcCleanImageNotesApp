@@ -81,11 +81,6 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
                     Toast.makeText(MainActivity.this, "Adding note failed.", Toast.LENGTH_SHORT).show();
                 }
             }
-
-        }
-        else if(event == TAKE_PICTURE){
-            ImageNoteDisplayFragment imageNoteDisplayFragment = (ImageNoteDisplayFragment)getFragmentManager().findFragmentById(R.id.middle_frame);
-            imageNoteDisplayFragment.takePicture();
         }
     }
 
@@ -138,15 +133,14 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
                 of.setmListener(this);
                 ft.replace(R.id.bottom_frame, of, OPTIONS_FRAGMENT_TAG);
                 ft.commit();
-                if (appear) {
-                    of.makeTakePictureButtonAppear();
-                } else {
-                    of.makeTakePictureButtonDisappear();
-                }
             }
         }
         catch (Exception e){
             Log.e("MainActivity", e.toString() + " in optionsFragmentSetUp method.");
         }
+    }
+
+    public interface OnFocusListenableInterface {
+        void onWindowFocusChangedInterface(boolean hasFocus);
     }
 }

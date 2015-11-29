@@ -1,5 +1,6 @@
 package com.example.kevin.kevinmccleanimagenotesapp;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,10 +18,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 
 //This display allows the user to take a picture with their phone, which they then have the option of saving.
-public class ImageNoteDisplayFragment extends Fragment implements View.OnClickListener{
+public class ImageNoteDisplayFragment extends Fragment {
 
     Button takePictureButton;
     ImageView cameraPicture;
@@ -34,66 +36,43 @@ public class ImageNoteDisplayFragment extends Fragment implements View.OnClickLi
     private static final int TAKE_PICTURE_REQUEST = 0;
 
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            pictureToDisplay = savedInstanceState.getBoolean(PICTURE_TO_DISPLAY, false);
-        }
-
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.image_note_display_fragment, container, false);
-        ;
-        cameraPicture = (ImageView) v.findViewById(R.id.image_note);
-        takePictureButton = (Button) v.findViewById(R.id.take_picture_button);
-        return v;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == getActivity().RESULT_OK && requestCode == TAKE_PICTURE_REQUEST) {
-            pictureToDisplay = true;
-
-            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            File file = new File(Environment.getExternalStorageDirectory(), filename);
-            imageFileUri = Uri.fromFile(file);
-            mediaScanIntent.setData(imageFileUri);
-            getActivity().sendBroadcast(mediaScanIntent);
-        } else {
-            pictureToDisplay = false;
-        }
-    }
-
-    public void takePicture(){
         Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
+        cameraPicture = (ImageView)v.findViewById(R.id.image_note);
         File file = new File(Environment.getExternalStorageDirectory(), filename);
         imageFileUri = Uri.fromFile(file);
 
         pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageFileUri);
 
-        if (pictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+        if (pictureIntent.resolveActivity(getActivity().getPackageManager()) != null){
             startActivityForResult(pictureIntent, TAKE_PICTURE_REQUEST);
-        } else {
+        }
+        else{
             Toast.makeText(getActivity(), "No camera available", Toast.LENGTH_SHORT).show();
+        }
+        return v;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(resultCode == getActivity().RESULT_OK && requestCode == TAKE_PICTURE_REQUEST){
+            pictureToDisplay = true;
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            File file = new File(Environment.getExternalStorageDirectory(), filename);
+            imageFileUri = Uri.fromFile(file);
+            mediaScanIntent.setData(imageFileUri);
+            cameraPicture.setImageBitmap(scaleBitmap());
+            getActivity().sendBroadcast(mediaScanIntent);
+        }
+        else {
+            pictureToDisplay = false;
         }
     }
 
-   /* @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-
-        if (hasFocus && pictureToDisplay) {
-            Bitmap image = scaleBitmap();
-            cameraPicture.setImageBitmap(image);
-        }
-    }*/
-
-    Bitmap scaleBitmap() {
+    Bitmap scaleBitmap () {
 
         // * Scale picture taken to fit into the ImageView */
         //Step 1: what size is the ImageView?
@@ -127,17 +106,8 @@ public class ImageNoteDisplayFragment extends Fragment implements View.OnClickLi
         bOptions.inJustDecodeBounds = false;   //now we want to get a bitmap
         bOptions.inSampleSize = scaleFactor;
 
-        return BitmapFactory.decodeFile(photoFilePath, bOptions);
-
-    }
-
-    @Override
-    public void onSaveInstanceState (Bundle outBundle){
-        outBundle.putBoolean(PICTURE_TO_DISPLAY, pictureToDisplay);
-    }
-
-    @Override
-    public void onClick(View v) {
+        Bitmap bitmap = BitmapFactory.decodeFile(photoFilePath, bOptions);
+        return bitmap;
 
     }
 }

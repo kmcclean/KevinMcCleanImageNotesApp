@@ -44,7 +44,6 @@ public class ChoicesTabFragment extends Fragment implements View.OnClickListener
             public void onClick(View v) {
                 Log.e("ChoicesTabFragment", "mImages.onClick accessed.");
                 mListener.onChoicesFragmentSelection(CAMERA_FRAGMENT);
-                //TODO When pressed, the program should switch the camera fragment.
 
             }
         });
@@ -53,7 +52,6 @@ public class ChoicesTabFragment extends Fragment implements View.OnClickListener
             @Override
             public void onClick(View v) {
                 Log.e("ChoicesTabFragment", "mText.onClick accessed.");
-                //TODO When pressed, the program should switch the text fragment.
                 mListener.onChoicesFragmentSelection(TEXT_FRAGMENT);
             }
         });
@@ -62,7 +60,6 @@ public class ChoicesTabFragment extends Fragment implements View.OnClickListener
             @Override
             public void onClick(View v) {
                 Log.e("ChoicesTabFragment", "mSaved.onClick accessed.");
-                //TODO When pressed, the program should switch the saved fragment.
                 mListener.onChoicesFragmentSelection(SAVED_FRAGMENT);
             }
         });
