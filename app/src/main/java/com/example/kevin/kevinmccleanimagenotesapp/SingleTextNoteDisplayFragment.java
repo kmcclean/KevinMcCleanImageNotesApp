@@ -28,8 +28,8 @@ public class SingleTextNoteDisplayFragment extends Fragment {
         mSavedNoteEditText = (EditText)v.findViewById(R.id.note_text_et);
         try{
             Bundle b = this.getArguments();
-            String text = b.getString(NOTE_TEXT);
-            mSavedNoteEditText.setText(text);
+            //String text = b.getString(NOTE_TEXT);
+            mSavedNoteEditText.setText(b.getString(NOTE_TEXT));
         }
         catch(Exception e){
             Log.e("TextNoteDisplayFragment","Note's not chosen yet.");

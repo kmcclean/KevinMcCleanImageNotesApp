@@ -60,13 +60,15 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
             String noteID = l.toString();
             Fragment save = getFragmentManager().findFragmentById(R.id.middle_frame);
 
+            //this saves the image from the image fragment.
             if(save.getTag().equals(IMAGE_FRAGMENT_TAG)){
                 ImageNoteDisplayFragment imageNoteDisplayFragment = (ImageNoteDisplayFragment)getFragmentManager().findFragmentById(R.id.middle_frame);
                 if(imageNoteDisplayFragment.saveImagePermanently(noteID)) {
                     OptionsFragment optionsFragment = (OptionsFragment) getFragmentManager().findFragmentById(R.id.bottom_frame);
                     String hashTags = optionsFragment.getmHashTagEditText();
-                    if (mDBM.addRow(noteID, hashTags, null, true)) {
+                    if (mDBM.addRow(noteID, hashTags, null, 1)) {
                         Toast.makeText(MainActivity.this, "Note added to database", Toast.LENGTH_SHORT).show();
+                        optionsFragment.mHashTagEditText.setText("");
                     } else {
                         Toast.makeText(MainActivity.this, "Failed to add note to database.", Toast.LENGTH_SHORT).show();
                     }
@@ -76,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
                 }
             }
 
+            //this saves the note from the text fragment.
             else if(save.getTag().equals(TEXT_FRAGMENT_TAG)){
                 TextNoteDisplayFragment textNoteDisplayFragment = (TextNoteDisplayFragment)getFragmentManager().findFragmentById(R.id.middle_frame);
                 String noteText = textNoteDisplayFragment.getmTextNote();
@@ -84,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
                 }
                 OptionsFragment optionsFragment = (OptionsFragment)getFragmentManager().findFragmentById(R.id.bottom_frame);
                 String hashTags = optionsFragment.getmHashTagEditText();
-                if(mDBM.addRow(noteID, hashTags, noteText, false)){
+                if(mDBM.addRow(noteID, hashTags, noteText, 0)){
                     Toast.makeText(MainActivity.this, "Note added to database.", Toast.LENGTH_SHORT).show();
                     textNoteDisplayFragment.mTextNote.setText("");
                     optionsFragment.mHashTagEditText.setText("");
@@ -106,24 +109,27 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
             ImageNoteDisplayFragment indf = new ImageNoteDisplayFragment();
             ft.replace(R.id.middle_frame, indf, IMAGE_FRAGMENT_TAG);
             ft.commit();
-            optionFragmentSetUp(false, true);
+            optionFragmentSetUp(false);
         }
+        //sets the event to the text fragment.
         else if (event == TEXT_FRAGMENT && !mf.getTag().equals(TEXT_FRAGMENT_TAG)) {
             ft = fm.beginTransaction();
             TextNoteDisplayFragment tndf = new TextNoteDisplayFragment();
             ft.replace(R.id.middle_frame, tndf, TEXT_FRAGMENT_TAG);
             ft.commit();
-            optionFragmentSetUp(false, false);
+            optionFragmentSetUp(false);
         }
-        else if (event == SAVED_FRAGMENT){// && !mf.getTag().equals(SAVED_FRAGMENT_TAG)) {
+        //sets the event to the saved images fragment.
+        else if (event == SAVED_FRAGMENT && !mf.getTag().equals(SAVED_FRAGMENT_TAG)) {
             ft = fm.beginTransaction();
             SavedNoteDisplayFragment sndf = new SavedNoteDisplayFragment();
             ft.replace(R.id.middle_frame, sndf, SAVED_FRAGMENT_TAG);
             ft.commit();
-            optionFragmentSetUp(true, false);
+            optionFragmentSetUp(true);
         }
     }
 
+    //this sets up the search request for notes, to limit what is shown.
     @Override
     public void searchNotes(String searchString){
         SavedNoteDisplayFragment sndf = (SavedNoteDisplayFragment)getFragmentManager().findFragmentById(R.id.middle_frame);
@@ -138,7 +144,8 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         sndf.gv.setAdapter(sna);
     }
 
-    public void optionFragmentSetUp(boolean isSaved, boolean appear) {
+    //this sets up the option fragment. It's mainly here because it saves a few lines of code earlier on.
+    public void optionFragmentSetUp(boolean isSaved) {
         try {
             ft = fm.beginTransaction();
             if (isSaved){
@@ -159,7 +166,9 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         }
     }
 
-    public interface OnFocusListenableInterface {
-        void onWindowFocusChangedInterface(boolean hasFocus);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mDBM.close();
     }
 }

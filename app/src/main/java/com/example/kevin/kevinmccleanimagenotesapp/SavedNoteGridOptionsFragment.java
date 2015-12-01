@@ -17,7 +17,7 @@ public class SavedNoteGridOptionsFragment extends Fragment {
     Button mSearchButton;
     SearchNotes searchListener;
 
-
+    //sets up the options for the savedNotes.
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

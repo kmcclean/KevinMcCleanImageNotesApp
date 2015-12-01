@@ -9,10 +9,12 @@
         android:layout_height="wrap_content">
 
         <EditText
+            android:text="@string/enter_hashtags"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/hash_tag_et"
-            android:padding="5dp"/>
+            android:padding="5dp"
+            android:textColor="#D3D3D3"/>
 
     </LinearLayout>
 

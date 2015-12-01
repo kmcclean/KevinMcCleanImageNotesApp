@@ -21,9 +21,11 @@ public class SavedSingleNoteActivity extends AppCompatActivity implements SavedS
 
     private final String TEXT_NOTE_FRAME_TAG = "text_note_frame";
     private final String OPTIONS_FRAME_TAG = "options_frame";
+    private final String IMAGE_NOTE_FRAME_TAG = "impage_note_Frame_TAg";
     private final int SAVE = 0;
     private final int DELETE = 1;
     private final int CANCEL = 2;
+    private final String IS_IMAGE = "this is or is not an image.";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,22 +35,34 @@ public class SavedSingleNoteActivity extends AppCompatActivity implements SavedS
         fm = getFragmentManager();
         ft = fm.beginTransaction();
 
-        SingleTextNoteDisplayFragment stndf = new SingleTextNoteDisplayFragment();
-        Bundle stndfBundle = new Bundle();
-        stndfBundle.putString(NOTE_TEXT, getIntent().getStringExtra(NOTE_TEXT));
-        stndf.setArguments(stndfBundle);
+        Bundle b = getIntent().getExtras();
 
         SavedSingleNoteOptionsFragment ssnof = new SavedSingleNoteOptionsFragment();
         ssnof.setSSNOFListener(this);
         Bundle ssnofBundle = new Bundle();
-        ssnofBundle.putString(HASH_TAGS, getIntent().getStringExtra(HASH_TAGS));
-        ssnofBundle.putString(NOTE_ID, getIntent().getStringExtra(NOTE_ID));
+        ssnofBundle.putString(HASH_TAGS, b.getString(HASH_TAGS));
+        ssnofBundle.putString(NOTE_ID, b.getString(NOTE_ID));
         ssnof.setArguments(ssnofBundle);
 
-        ft.add(R.id.note_frame, stndf, TEXT_NOTE_FRAME_TAG);
-        ft.add(R.id.options_frame, ssnof, OPTIONS_FRAME_TAG);
-        ft.addToBackStack(null);
-        ft.commit();
+        if(b.getBoolean(IS_IMAGE)){
+            SingleImageNoteDisplayFragment sindf = new SingleImageNoteDisplayFragment();
+            Bundle sindfBundle = new Bundle();
+            sindfBundle.putString(NOTE_ID, b.getString(NOTE_ID));
+            ft.add(R.id.note_frame, sindf, IMAGE_NOTE_FRAME_TAG);
+            ft.add(R.id.options_frame, ssnof, OPTIONS_FRAME_TAG);
+            ft.addToBackStack(null);
+            ft.commit();
+        }
+        else {
+            SingleTextNoteDisplayFragment stndf = new SingleTextNoteDisplayFragment();
+            Bundle stndfBundle = new Bundle();
+            stndfBundle.putString(NOTE_TEXT, b.getString(NOTE_TEXT));
+            stndf.setArguments(stndfBundle);
+            ft.add(R.id.note_frame, stndf, TEXT_NOTE_FRAME_TAG);
+            ft.add(R.id.options_frame, ssnof, OPTIONS_FRAME_TAG);
+            ft.addToBackStack(null);
+            ft.commit();
+        }
     }
 
     @Override

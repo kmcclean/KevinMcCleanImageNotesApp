@@ -19,19 +19,13 @@ public class ChoicesTabFragment extends Fragment implements View.OnClickListener
     TextView mText;
     TextView mSaved;
 
-
     private final int CAMERA_FRAGMENT = 0;
     private final int TEXT_FRAGMENT = 1;
     private final int SAVED_FRAGMENT = 2;
 
     OnChoicesFragmentSelectedListener mListener;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
+    //this sets up the view and attaches the java to the xml.
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,6 +65,7 @@ public class ChoicesTabFragment extends Fragment implements View.OnClickListener
         this.mListener = listener;
     }
 
+    //this listener takes the selection from the user and switches to the appropriate tab.
     public interface OnChoicesFragmentSelectedListener{
         void onChoicesFragmentSelection(Integer event);
     }

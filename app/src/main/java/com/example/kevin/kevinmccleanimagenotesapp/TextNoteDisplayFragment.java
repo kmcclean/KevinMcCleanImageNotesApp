@@ -2,6 +2,7 @@ package com.example.kevin.kevinmccleanimagenotesapp;
 
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -23,6 +24,13 @@ public class TextNoteDisplayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.text_note_display_fragment, container, false);
         mTextNote = (EditText)v.findViewById(R.id.note_text_et);
+        mTextNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTextNote.setText("");
+                mTextNote.setTextColor(Color.parseColor("#000000"));
+            }
+        });
         return v;
     }
 

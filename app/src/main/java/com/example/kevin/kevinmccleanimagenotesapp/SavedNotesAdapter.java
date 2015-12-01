@@ -34,17 +34,6 @@ public class SavedNotesAdapter extends ArrayAdapter {
         this.mNotesArrayList = notes;
     }
 
-    public SavedNotesAdapter (Activity a, ArrayList<Notes> notes, String searchConditions){
-        super (a, R.layout.note_list, notes);
-        this.mActivity = a;
-        this.mNotesArrayList = new ArrayList<>();
-        for (Notes n : notes) {
-            if (n.getNoteText().toLowerCase().contains(searchConditions.toLowerCase()) || n.getHashTag().toLowerCase().contains(searchConditions.toLowerCase())) {
-                mNotesArrayList.add(n);
-            }
-        }
-    }
-
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = mActivity.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.note_list, null, true);
@@ -53,13 +42,11 @@ public class SavedNotesAdapter extends ArrayAdapter {
         if(!note.isPicture) {
             mNoteListTextView = (TextView) rowView.findViewById(R.id.note_list_text_view);
             mNoteListTextView.setText("Note: " + note.getNoteText());
-//            thumbnail.setVisibility(View.INVISIBLE);
 
         }
         else if (note.isPicture){
             thumbnail = (ImageView) rowView.findViewById(R.id.thumbnail_image_view);
             thumbnail.setImageBitmap(createThumbnail(note.getNoteID()));
-//            mNoteListTextView.setVisibility(View.INVISIBLE);
         }
         hashtags.setText("Hashtags: " + note.getHashTag());
         return rowView;
@@ -68,36 +55,23 @@ public class SavedNotesAdapter extends ArrayAdapter {
 
     Bitmap createThumbnail (String fileName) {
 
-        // * Scale picture taken to fit into the ImageView */
-        //Step 1: what size is the ImageView?
         int imageViewHeight = thumbnail.getHeight();
         int imageViewWidth = thumbnail.getWidth();
 
-        //Step 2: decode file to find out how large the image is.
-        //BitmapFactory is used to create bitmaps from pixels in a file.
-        // Many options and settings, so use a BitmapFactory.Options object to store our desired settings.
-        //Set the inJustDecodeBounds flag to true,
-        //which means just the *information about* the picture is decoded and stored in bOptions
-        //Not all of the pixels have to be read and stored here.
-        //When we've done this, we can query bOptions to find out the original picture's height and width.
         BitmapFactory.Options bOptions = new BitmapFactory.Options();
         bOptions.inJustDecodeBounds = true;
-        //File file = new File("C:\\temp\\image_app_photos", tempFileName);
-        File file = new File(Environment.getExternalStorageDirectory(), fileName);
+        File file = new File(Environment.getExternalStorageDirectory(), fileName + ".jpg");
         Uri imageFileUri = Uri.fromFile(file);
         String photoFilePath = imageFileUri.getPath();
 
         BitmapFactory.decodeFile(photoFilePath, bOptions);
 
-        //What size is the picture?
         int pictureHeight = bOptions.outHeight;
         int pictureWidth = bOptions.outWidth;
 
-        //Step 3. Can use the original size and target size to calculate scale factor
         int scaleFactor = Math.min((pictureHeight / imageViewHeight)/10, (pictureWidth / imageViewWidth)/10);
 
-        //Step 4. Decode the image file into a new bitmap, scaled to fit the ImageView
-        bOptions.inJustDecodeBounds = false;   //now we want to get a bitmap
+        bOptions.inJustDecodeBounds = false;
         bOptions.inSampleSize = scaleFactor;
 
         Bitmap bitmap = BitmapFactory.decodeFile(photoFilePath, bOptions);

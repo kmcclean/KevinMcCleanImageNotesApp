@@ -2,6 +2,7 @@ package com.example.kevin.kevinmccleanimagenotesapp;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+
+import java.util.Set;
 
 //This displays the buttons at the bottom of the screen for the ImageNoteDisplayFragment and the TextNoteDisplayFragment.
 public class OptionsFragment extends Fragment implements View.OnClickListener{
@@ -20,8 +23,6 @@ public class OptionsFragment extends Fragment implements View.OnClickListener{
     OnOptionFragmentSelectedListener mListener;
 
     private final int SAVE_BUTTON = 0;
-    private final int TAKE_PICTURE = 1;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,11 +37,18 @@ public class OptionsFragment extends Fragment implements View.OnClickListener{
         mHashTagEditText = (EditText)v.findViewById(R.id.hash_tag_et);
         mSaveButton = (Button)v.findViewById(R.id.save_button);
 
+        mHashTagEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mHashTagEditText.setTextColor(Color.parseColor("#000000"));
+                mHashTagEditText.setText("");
+            }
+        });
+
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mListener.onOptionsFragmentButtonSelected(SAVE_BUTTON);
-                //TODO when this button is pressed, the system will check to see if there information in the hashtag, and that there is either a picture taken or a TextNote written. If so, it will send the information to the MainActivity in order to save the note
             }
         });
 
@@ -53,7 +61,6 @@ public class OptionsFragment extends Fragment implements View.OnClickListener{
 
     public void setmListener(OnOptionFragmentSelectedListener listener){
         this.mListener = listener;
-
     }
 
     @Override

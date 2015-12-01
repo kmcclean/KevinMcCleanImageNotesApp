@@ -9,15 +9,14 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileOutputStream;
 
 //This display allows the user to take a picture with their phone, which they then have the option of saving.
 public class ImageNoteDisplayFragment extends Fragment {
@@ -27,7 +26,7 @@ public class ImageNoteDisplayFragment extends Fragment {
     final String tempFileName = "temp_photo.jpg";
     Uri imageFileUri;
 
-    private static final String PICTURE_TO_DISPLAY = "picture has been taken";
+    Bitmap mBitmap;
     boolean pictureToDisplay = false;
 
     private static final int TAKE_PICTURE_REQUEST = 0;
@@ -39,7 +38,6 @@ public class ImageNoteDisplayFragment extends Fragment {
         View v = inflater.inflate(R.layout.image_note_display_fragment, container, false);
         Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraPicture = (ImageView)v.findViewById(R.id.image_note);
-        //File file = new File("C:\\temp\\image_app_photos", tempFileName);
         File file = new File(Environment.getExternalStorageDirectory(), tempFileName);
         imageFileUri = Uri.fromFile(file);
 
@@ -59,12 +57,12 @@ public class ImageNoteDisplayFragment extends Fragment {
         if(resultCode == getActivity().RESULT_OK && requestCode == TAKE_PICTURE_REQUEST){
             pictureToDisplay = true;
             Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            //File file = new File("C:\\temp\\image_app_photos", tempFileName);
             File file = new File(Environment.getExternalStorageDirectory(), tempFileName);
             imageFileUri = Uri.fromFile(file);
             mediaScanIntent.setData(imageFileUri);
             getActivity().sendBroadcast(mediaScanIntent);
-            cameraPicture.setImageBitmap(scaleBitmap());
+            mBitmap = scaleBitmap();
+            cameraPicture.setImageBitmap(mBitmap);
         }
         else {
             pictureToDisplay = false;
@@ -72,37 +70,25 @@ public class ImageNoteDisplayFragment extends Fragment {
     }
 
 
+    //this makes the bitmap image which is shown to the user.
     Bitmap scaleBitmap () {
 
-        // * Scale picture taken to fit into the ImageView */
-        //Step 1: what size is the ImageView?
         int imageViewHeight = cameraPicture.getHeight();
         int imageViewWidth = cameraPicture.getWidth();
 
-        //Step 2: decode file to find out how large the image is.
-        //BitmapFactory is used to create bitmaps from pixels in a file.
-        // Many options and settings, so use a BitmapFactory.Options object to store our desired settings.
-        //Set the inJustDecodeBounds flag to true,
-        //which means just the *information about* the picture is decoded and stored in bOptions
-        //Not all of the pixels have to be read and stored here.
-        //When we've done this, we can query bOptions to find out the original picture's height and width.
         BitmapFactory.Options bOptions = new BitmapFactory.Options();
         bOptions.inJustDecodeBounds = true;
-        //File file = new File("C:\\temp\\image_app_photos", tempFileName);
         File file = new File(Environment.getExternalStorageDirectory(), tempFileName);
         Uri imageFileUri = Uri.fromFile(file);
         String photoFilePath = imageFileUri.getPath();
 
         BitmapFactory.decodeFile(photoFilePath, bOptions);
 
-        //What size is the picture?
         int pictureHeight = bOptions.outHeight;
         int pictureWidth = bOptions.outWidth;
 
-        //Step 3. Can use the original size and target size to calculate scale factor
         int scaleFactor = Math.min(pictureHeight / imageViewHeight, pictureWidth / imageViewWidth);
 
-        //Step 4. Decode the image file into a new bitmap, scaled to fit the ImageView
         bOptions.inJustDecodeBounds = false;   //now we want to get a bitmap
         bOptions.inSampleSize = scaleFactor;
 
@@ -110,21 +96,23 @@ public class ImageNoteDisplayFragment extends Fragment {
         return bitmap;
     }
 
-    public boolean saveImagePermanently(String permanentFileName){
+    //this will save the image permanately. It will stay in the same file, but will have a name besides "temp_photo".
+    public boolean saveImagePermanently(String permanentFileName) {
+        String path = Environment.getExternalStorageDirectory().toString();
+        File directory = new File(path, permanentFileName + ".jpg");
+        FileOutputStream out = null;
         try {
-            //File tempFile = new File("C:\\temp\\image_app_photos", tempFileName);
-            File tempFile = new File(Environment.getExternalStorageDirectory(), tempFileName);
-            Uri tempImageFileUri = Uri.fromFile(tempFile);
-            //String photoFilePath = imageFileUri.getPath();
-            //File permanentFile = new File("C:\\temp\\moved_images", permanentFileName);
-            File permanentFile = new File(tempImageFileUri.getPath(), permanentFileName);
-            //Uri permImageFileUri = Uri.fromFile(permanentFile);
-            //mediaScanIntent.setData(imageFileUri);
-            //getActivity().sendBroadcast(mediaScanIntent);
-            return true;
-        }
-        catch (Exception e){
-            Log.e(e.toString(), " Error in ImageNoteDisplayFragment.java");
+            out = new FileOutputStream(directory);
+            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            if (out != null) {
+                out.close();
+                return true;
+            }
+            else{
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }

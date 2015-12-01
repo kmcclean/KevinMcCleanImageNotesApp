@@ -8,4 +8,6 @@
     <string name ="delete_button">Delete</string>
     <string name ="cancel_button">Cancel</string>
     <string name ="search_button">Search</string>
+    <string name ="enter_hashtags">Enter hashtags</string>
+    <string name = "enter_note">Enter note</string>
 </resources>
