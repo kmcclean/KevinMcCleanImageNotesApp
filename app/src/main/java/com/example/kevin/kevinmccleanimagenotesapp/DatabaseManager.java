@@ -33,7 +33,16 @@ public class DatabaseManager {
         this.context = c;
         this.helper = new SQLHelper(c);
         this.db = helper.getWritableDatabase();
-//        helper.onCreate(db);
+        //helper.onCreate(db);
+    }
+
+    public DatabaseManager (Context c, boolean createNew){
+        if (createNew){
+            this.context = c;
+            this.helper = new SQLHelper(c);
+            this.db = helper.getWritableDatabase();
+            helper.onCreate(db);
+        }
     }
 
     public void close() {
@@ -50,7 +59,8 @@ public class DatabaseManager {
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("DROP TABLE IF EXISTS " + DB_TABLE + ";");
-            String createTable = "CREATE TABLE " + DB_TABLE + " (" + NOTE_ID + " TEXT, "  + NOTE_TEXT + " TEXT, " + HASH_TAGS + " TEXT, " + NOTE_TYPE + " INTEGER);";
+            String createTable = "CREATE TABLE " + DB_TABLE + " (" + NOTE_ID + " TEXT, "  + NOTE_TEXT + " TEXT, " + HASH_TAGS + " TEXT);";
+            //String createTable = "CREATE TABLE " + DB_TABLE + " (" + NOTE_ID + " TEXT, "  + NOTE_TEXT + " TEXT, " + HASH_TAGS + " TEXT, " + NOTE_TYPE + " INTEGER);";
             db.execSQL(createTable);
         }
 
@@ -65,12 +75,19 @@ public class DatabaseManager {
     public ArrayList<Notes> fetchAll() {
         String cols[] = {NOTE_ID, HASH_TAGS, NOTE_TEXT};//, NOTE_TYPE};
         Cursor cursor = db.query(DB_TABLE, cols, null, null, null, null, HASH_TAGS);
-        ArrayList<String> notes = new ArrayList<>();
+        //ArrayList<String> notes = new ArrayList<>();
         ArrayList<Notes> notesList = new ArrayList<>();
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            Notes newNote = new Notes(cursor.getString(0), cursor.getString(1), cursor.getString(2), false);
-            notes.add(cursor.getString(2));
+            Notes newNote;
+            if(cursor.getString(1).equals(null) || cursor.getString(1).equals("null")) {
+                newNote = new Notes(cursor.getString(0), cursor.getString(1), cursor.getString(2), true);
+            }
+            else {
+                newNote = new Notes(cursor.getString(0), cursor.getString(1), cursor.getString(2), false);
+            }
+            //Notes newNote = new Notes(cursor.getString(0), cursor.getString(1), cursor.getString(2), cursor.getInt(3));
+            //notes.add(cursor.getString(2));
             notesList.add(newNote);
             cursor.moveToNext();
         }
@@ -80,12 +97,12 @@ public class DatabaseManager {
         return notesList;
     }
 
-    public boolean addRow(String rowID, String hashTags, String noteText, Integer isPicture) {
+    public boolean addRow(String rowID, String hashTags, String noteText, Boolean isPicture) {
         ContentValues newRow = new ContentValues();
         newRow.put(NOTE_ID, rowID);
         newRow.put(HASH_TAGS, hashTags);
         newRow.put(NOTE_TEXT, noteText);
-        newRow.put(NOTE_TYPE, isPicture);
+        //newRow.put(NOTE_TYPE, isPicture);
         try {
             db.insertOrThrow(DB_TABLE, null, newRow);
             return true;

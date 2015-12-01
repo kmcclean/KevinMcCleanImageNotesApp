@@ -8,10 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity implements OptionsFragment.OnOptionFragmentSelectedListener, ChoicesTabFragment.OnChoicesFragmentSelectedListener{
+public class MainActivity extends AppCompatActivity implements OptionsFragment.OnOptionFragmentSelectedListener, ChoicesTabFragment.OnChoicesFragmentSelectedListener, SavedNoteGridOptionsFragment.SearchNotes{
     private final int SAVE = 0;
     private final int IMAGE_FRAGMENT = 0;
     private final int TEXT_FRAGMENT = 1;
@@ -48,8 +49,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         ft.addToBackStack(null);
         ft.commit();
 
-        mDBM = new DatabaseManager(this);
-
+        mDBM = new DatabaseManager(this, true);
     }
 
     //This controls what happens when the optionsFragment button is pressed. It sends and receives data between the Fragments here.
@@ -62,9 +62,18 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
 
             if(save.getTag().equals(IMAGE_FRAGMENT_TAG)){
                 ImageNoteDisplayFragment imageNoteDisplayFragment = (ImageNoteDisplayFragment)getFragmentManager().findFragmentById(R.id.middle_frame);
-                OptionsFragment optionsFragment = (OptionsFragment)getFragmentManager().findFragmentById(R.id.bottom_frame);
-                String hashTags = optionsFragment.getmHashTagEditText();
-                mDBM.addRow(noteID, hashTags, null, 1);
+                if(imageNoteDisplayFragment.saveImagePermanently(noteID)) {
+                    OptionsFragment optionsFragment = (OptionsFragment) getFragmentManager().findFragmentById(R.id.bottom_frame);
+                    String hashTags = optionsFragment.getmHashTagEditText();
+                    if (mDBM.addRow(noteID, hashTags, null, true)) {
+                        Toast.makeText(MainActivity.this, "Note added to database", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Failed to add note to database.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else{
+                    Toast.makeText(MainActivity.this, "Failed to save picture.", Toast.LENGTH_SHORT).show();
+                }
             }
 
             else if(save.getTag().equals(TEXT_FRAGMENT_TAG)){
@@ -75,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
                 }
                 OptionsFragment optionsFragment = (OptionsFragment)getFragmentManager().findFragmentById(R.id.bottom_frame);
                 String hashTags = optionsFragment.getmHashTagEditText();
-                if(mDBM.addRow(noteID, hashTags, noteText, 0)){
+                if(mDBM.addRow(noteID, hashTags, noteText, false)){
                     Toast.makeText(MainActivity.this, "Note added to database.", Toast.LENGTH_SHORT).show();
                     textNoteDisplayFragment.mTextNote.setText("");
                     optionsFragment.mHashTagEditText.setText("");
@@ -106,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
             ft.commit();
             optionFragmentSetUp(false, false);
         }
-        else if (event == SAVED_FRAGMENT && !mf.getTag().equals(SAVED_FRAGMENT_TAG)) {
+        else if (event == SAVED_FRAGMENT){// && !mf.getTag().equals(SAVED_FRAGMENT_TAG)) {
             ft = fm.beginTransaction();
             SavedNoteDisplayFragment sndf = new SavedNoteDisplayFragment();
             ft.replace(R.id.middle_frame, sndf, SAVED_FRAGMENT_TAG);
@@ -115,11 +124,26 @@ public class MainActivity extends AppCompatActivity implements OptionsFragment.O
         }
     }
 
+    @Override
+    public void searchNotes(String searchString){
+        SavedNoteDisplayFragment sndf = (SavedNoteDisplayFragment)getFragmentManager().findFragmentById(R.id.middle_frame);
+        ArrayList<Notes> notesToSearch = sndf.getNotes();
+        ArrayList<Notes> searchedNotes = new ArrayList<>();
+        for (Notes n : notesToSearch) {
+            if (n.getNoteText().toLowerCase().contains(searchString.toLowerCase()) || n.getHashTag().toLowerCase().contains(searchString.toLowerCase())) {
+                searchedNotes.add(n);
+            }
+        }
+        SavedNotesAdapter sna = new SavedNotesAdapter(this, searchedNotes);
+        sndf.gv.setAdapter(sna);
+    }
+
     public void optionFragmentSetUp(boolean isSaved, boolean appear) {
         try {
             ft = fm.beginTransaction();
             if (isSaved){
                 SavedNoteGridOptionsFragment sngof = new SavedNoteGridOptionsFragment();
+                sngof.setSearchListener(this);
                 ft.replace(R.id.bottom_frame, sngof, SAVED_OPTIONS_FRAGMENT_TAG);
                 ft.commit();
             }

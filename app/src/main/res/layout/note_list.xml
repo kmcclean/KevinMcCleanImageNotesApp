@@ -7,5 +7,13 @@
         android:id="@+id/note_list_text_view"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
+    <ImageView
+        android:id="@+id/thumbnail_image_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/hash_tags_saved_notes_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

@@ -17,12 +17,12 @@ public class Notes {
         this.isPicture = isPic;
     }
 
-    public Notes(String id, String ht, Bitmap pic, boolean isPic){
+    /*public Notes(String id, String ht, Bitmap pic, boolean isPic){
         this.noteID = id;
         this.hashTag = ht;
         notePicture = pic;
         this.isPicture = isPic;
-    }
+    }*/
 
     public String getHashTag() {
         return hashTag;
@@ -34,5 +34,9 @@ public class Notes {
 
     public String getNoteID() {
         return noteID;
+    }
+
+    public boolean getIsPicture(){
+        return isPicture;
     }
 }

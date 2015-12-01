@@ -21,6 +21,7 @@ public class SavedNoteDisplayFragment extends Fragment{
     private final int CHANGES = 0;
     DatabaseManager mDBM;
     SavedNotesAdapter sna;
+    ArrayList<Notes> notes;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,10 +32,13 @@ public class SavedNoteDisplayFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.saved_note_fragment, container, false);
+        /*
         mDBM = new DatabaseManager(getActivity());
         ArrayList<Notes> notesList = mDBM.fetchAll();
         sna = new SavedNotesAdapter(getActivity(), notesList);
-
+        */
+        notes = getNotes();
+        sna = new SavedNotesAdapter(getActivity(), notes);
         gv = (GridView)v.findViewById(R.id.gridView);
         gv.setAdapter(sna);
 
@@ -42,12 +46,11 @@ public class SavedNoteDisplayFragment extends Fragment{
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(getActivity(), SavedSingleNoteActivity.class);
-                Notes n = (Notes)parent.getItemAtPosition(position);
+                Notes n = (Notes) parent.getItemAtPosition(position);
                 i.putExtra(NOTE_TEXT, n.getNoteText());
                 i.putExtra(NOTE_ID, n.getNoteID());
                 i.putExtra(HASH_TAGS, n.getHashTag());
                 getActivity().startActivityForResult(i, CHANGES);
-
             }
         });
 
@@ -56,10 +59,24 @@ public class SavedNoteDisplayFragment extends Fragment{
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if(resultCode == 0 || resultCode ==1){
+        /*//sna.notifyDataSetChanged();
+        ArrayList<Notes> updatedNotesList = getNotes();
+        SavedNotesAdapter newSNA = new SavedNotesAdapter(getActivity(), updatedNotesList);
+        gv.setAdapter(newSNA);
+        /*if(resultCode == 0 || resultCode ==1){
+            SavedNotesAdapter newSNA = new SavedNotesAdapter(this, )
             sna.notifyDataSetChanged();
-        }
-
+            gv.setAdapter(sna);
+        }*/
     }
+
+    public ArrayList<Notes>getNotes(){
+        mDBM = new DatabaseManager(getActivity());
+        ArrayList<Notes> notesList = mDBM.fetchAll();
+        return notesList;
+    }
+    /*
+    public void searchSavedNotes(){
+        sna = new SavedNotesAdapter(getActivity(), note)
+    }*/
 }
